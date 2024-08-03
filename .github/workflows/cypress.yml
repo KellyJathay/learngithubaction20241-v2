@@ -1,0 +1,33 @@
+name: Cypress Tests Run on Pipeline UI
+run-name: GitHub Actions using Cypress
+
+on: [push]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Npm install  
+        run: npm install
+
+      - name: Run Cypress
+        run: npx cypress run
+             
+      - name: Upload artefatos screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()    
+        with:
+          name: Cypress screenshots
+          path: cypress/screenshots
+
+      - name: Upload artefatos videos
+        uses: actions/upload-artifact@v4
+        with:
+          name: Cypress videos
+          path: cypress/videos    
